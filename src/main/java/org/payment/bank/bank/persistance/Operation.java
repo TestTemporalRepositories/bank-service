@@ -23,6 +23,8 @@ public class Operation {
 
     private Long amount;
 
+    private String accountId;
+
     @Enumerated(EnumType.STRING)
     private OperationType type;
 
