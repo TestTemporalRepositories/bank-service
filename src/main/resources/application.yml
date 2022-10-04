@@ -1,0 +1,19 @@
+server:
+  port: 8092
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:5432/temporal_bank_ops
+    username: ubank
+    password: ubank
+  flyway:
+    locations: classpath:db/migrations
+
+application:
+  temporal:
+    server: "127.0.0.1:7233"
+    namespace: "test-namespace"
+    workers:
+      BANK:
+        queue-name: "BANK-TASK-QUEUE"
