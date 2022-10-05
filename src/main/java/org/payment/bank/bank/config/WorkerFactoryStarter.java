@@ -3,6 +3,7 @@ package org.payment.bank.bank.config;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 import lombok.RequiredArgsConstructor;
+import org.payment.bank.bank.activities.PaymentActivity;
 import org.payment.bank.bank.config.properties.WorkerProperties;
 import org.payment.bank.bank.config.properties.Workers;
 import org.springframework.context.ApplicationListener;
@@ -15,6 +16,7 @@ public class WorkerFactoryStarter implements ApplicationListener<ContextRefreshe
 
     private final Map<String, WorkerProperties> workerPropertiesMap;
     private final WorkerFactory workerFactory;
+    private final PaymentActivity paymentActivity;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -24,5 +26,6 @@ public class WorkerFactoryStarter implements ApplicationListener<ContextRefreshe
 
     private void setOrderWorker(WorkerProperties workerProperties) {
         Worker worker = workerFactory.newWorker(workerProperties.getQueueName());
+        worker.registerActivitiesImplementations(paymentActivity);
     }
 }
