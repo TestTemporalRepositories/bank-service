@@ -6,7 +6,10 @@ import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import io.temporal.worker.WorkerFactory;
 import lombok.AllArgsConstructor;
+import org.payment.bank.bank.activities.PaymentActivity;
+import org.payment.bank.bank.activities.PaymentActivityImpl;
 import org.payment.bank.bank.config.properties.TemporalProperties;
+import org.payment.bank.bank.persistance.OperationRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -40,11 +43,21 @@ public class TemporalConfig {
     public WorkerFactory workerFactory(WorkflowClient workflowClient) {
         return WorkerFactory.newInstance(workflowClient);
     }
+
     @Bean
-    public WorkerFactoryStarter workerFactoryStarter(WorkerFactory workerFactory) {
+    public PaymentActivity paymentActivity(OperationRepository operationRepository) {
+        return new PaymentActivityImpl(operationRepository);
+    }
+
+    @Bean
+    public WorkerFactoryStarter workerFactoryStarter(
+            WorkerFactory workerFactory,
+            PaymentActivity paymentActivity
+    ) {
         return new WorkerFactoryStarter(
                 temporalProperties.getWorkers(),
-                workerFactory
+                workerFactory,
+                paymentActivity
         );
     }
 }
