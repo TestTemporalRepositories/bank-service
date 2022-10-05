@@ -5,6 +5,8 @@ import org.payment.bank.bank.persistance.Operation;
 import org.payment.bank.bank.persistance.OperationRepository;
 import org.payment.bank.bank.persistance.OperationType;
 
+import java.util.List;
+
 public class PaymentActivityImpl implements PaymentActivity {
 
     private final OperationRepository operationRepository;
@@ -33,5 +35,22 @@ public class PaymentActivityImpl implements PaymentActivity {
         operation.setAccountId(paymentDto.getToAccountId());
 
         operationRepository.save(operation);
+    }
+
+    @Override
+    public void fullPayment(PaymentDto paymentDto) {
+        Operation operationOut = new Operation();
+        operationOut.setType(OperationType.PAY_OUT);
+        operationOut.setAmount(paymentDto.getAmount());
+        operationOut.setCurrency(paymentDto.getCurrency());
+        operationOut.setAccountId(paymentDto.getFromAccountId());
+
+        Operation operationIn = new Operation();
+        operationIn.setType(OperationType.PAY_IN);
+        operationIn.setAmount(paymentDto.getAmount());
+        operationIn.setCurrency(paymentDto.getCurrency());
+        operationIn.setAccountId(paymentDto.getToAccountId());
+
+        operationRepository.saveAll(List.of(operationOut, operationIn));
     }
 }

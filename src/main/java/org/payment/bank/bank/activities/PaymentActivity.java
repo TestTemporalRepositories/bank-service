@@ -12,4 +12,7 @@ public interface PaymentActivity {
 
     @ActivityMethod
     void payIn(PaymentDto paymentDto);
+
+    @ActivityMethod
+    void fullPayment(PaymentDto paymentDto);
 }
